@@ -1,0 +1,35 @@
+private void InputTextBox_TextChanged(object sender, EventArgs e)
+{
+    // Сохранение текущей позиции курсора
+    int selectionStart = inputTextBox.SelectionStart;
+    int selectionLength = inputTextBox.SelectionLength;
+
+    // Очистка форматирования текста
+    inputTextBox.SelectAll();
+    inputTextBox.SelectionColor = Color.Black;
+
+    // Определение ключевых слов
+    string[] keywords = { "using", "namespace", "class", "public", "private", "static", "void", "int", "string" };
+
+    // Поиск и форматирование ключевых слов
+    foreach (string keyword in keywords)
+    {
+        int index = 0;
+        while (index < inputTextBox.TextLength)
+        {
+            int keywordStart = inputTextBox.Find(keyword, index, RichTextBoxFinds.WholeWord);
+            if (keywordStart == -1)
+                break;
+
+            inputTextBox.Select(keywordStart, keyword.Length);
+            inputTextBox.SelectionColor = Color.Blue;
+            index = keywordStart + keyword.Length;
+        }
+    }
+
+    // Восстановление позиции курсора
+    inputTextBox.Select(selectionStart, selectionLength);
+    inputTextBox.SelectionColor = Color.Black;
+    UpdateLineNumbers();
+
+}
