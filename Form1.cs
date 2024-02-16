@@ -24,8 +24,8 @@ namespace laba1
         private void UpdateStatusLabels(object sender, EventArgs e)
         {
 
-            dateLabel.Text = "" + DateTime.Now.ToLongDateString();
-            timeLabel.Text = "" + DateTime.Now.ToLongTimeString();
+            dateLabel.Text = "Дата" + " " + DateTime.Now.ToLongDateString();
+            timeLabel.Text = "Время" + " " + DateTime.Now.ToLongTimeString();
 
 
             var currentLayout = InputLanguage.CurrentInputLanguage.LayoutName;
@@ -47,12 +47,11 @@ namespace laba1
         { 
             inputTextBox.Paste();
         }
-        public void Copy() 
-        { 
+        public void Copy()
+        {
             if (inputTextBox.SelectionLength > 0)
-            { 
-                inputTextBox.Copy();
-            } 
+            {
+                inputTextBox.Copy();}
         }
         public void Cut() 
         { 
@@ -248,9 +247,15 @@ namespace laba1
             Next(); 
         }
 
-        private void backToolStripMenuItem_Click(object sender, EventArgs e) {Back(); }
+        private void backToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
+            Back();
+        }
 
-        private void nextToolStripMenuItem_Click(object sender, EventArgs e) {Next(); }
+        private void nextToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
+            Next();
+        }
 
         private void delToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -260,7 +265,10 @@ namespace laba1
             }
         }
 
-        private void allToolStripMenuItem_Click(object sender, EventArgs e) { inputTextBox.SelectAll(); }
+        private void allToolStripMenuItem_Click(object sender, EventArgs e) 
+        { 
+            inputTextBox.SelectAll();
+        }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e) {
             DialogResult result = MessageBox.Show("Сохранить изменения перед выходом?", "Подтверждение", MessageBoxButtons.YesNoCancel);
@@ -317,15 +325,6 @@ namespace laba1
             Save();
         }
 
-        private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            // Обновление размеров элементов управления при изменении размера панелей
-            inputTextBox.Width = splitContainer1.Panel1.Width;
-            inputTextBox.Height = splitContainer1.Panel1.Height;
-
-            outputTextBox.Width = splitContainer1.Panel2.Width;
-            outputTextBox.Height = splitContainer1.Panel2.Height;
-        }
 
         private void inputTextBox_Load(object sender, EventArgs e)
         {
