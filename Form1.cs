@@ -389,7 +389,7 @@ namespace laba1
             string[] keyword1 = { "constexpr" };
             string[] keyword2 = { "const" };
             string[] delimiters = { " " };
-            string[] dataTypes = { ":i32" };
+            string[] dataTypes = { "int" };
             string[] equallies = { "=" };
             string[] pluses = { "+" };
             string[] minuses = { "-" };
