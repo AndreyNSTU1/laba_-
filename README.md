@@ -60,10 +60,10 @@
 <p><b><i>Примеры верных строк:</b></i></p>
 <p>constexpr int a = 5; </p>
 <p>const int b = -7; </p>
-<img src = "лаба 2 автомат.drawio.png.jpg" style="width: 700px">
+<img src = "лаба 2 автомат.drawio.png" style="width: 700px">
 <p><b><i>Тестовые примеры:</b></i></p>
 <img src = "test1.png" style="width: 700px">
-
+<img src = "test2.png" style="width: 700px">
 </body>
 
 </html>
