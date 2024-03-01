@@ -324,11 +324,239 @@ namespace laba1
         { 
             Save();
         }
+        
 
-
+        
         private void inputTextBox_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        public class Lexeme
+        {
+            public int Code { get; set; }
+            public LexemeType Type { get; set; }
+            public string Token { get; set; }
+            public int StartPosition { get; set; }
+            public int EndPosition { get; set; }
+
+            public Lexeme(int code, LexemeType type, string input, int startPosition, int endPosition)
+            {
+                Code = code;
+                Type = type;
+                Token = input.Substring(startPosition, endPosition - startPosition + 1);
+                StartPosition = startPosition;
+                EndPosition = endPosition;
+            }
+        }
+
+        public enum LexemeType
+        {
+           
+            Keyword1,
+            Keyword2,
+            DataType,
+            Equally,
+            Semicolon,
+            Plus,
+            Minus,
+            Delimiter,
+            Identifier,
+            Number,
+            Invalid
+        }
+
+        private void buttonPlay_Click_1(object sender, EventArgs e)
+        {
+            string input = inputTextBox.Text;
+
+            Dictionary<LexemeType, int> lexemeCodes = new Dictionary<LexemeType, int>()
+{
+    { LexemeType.Keyword1, 1 },
+    { LexemeType.Keyword2, 2 },
+    { LexemeType.Delimiter, 5 },
+    { LexemeType.Identifier, 3 },
+    { LexemeType.DataType, 4 },
+    { LexemeType.Equally, 6 },
+    { LexemeType.Plus, 8 },
+    { LexemeType.Minus, 7 },
+    { LexemeType.Semicolon, 9 },
+    { LexemeType.Number, 10 },
+    { LexemeType.Invalid, 11 }
+};
+
+            string[] keyword1 = { "constexpr"};
+            string[] keyword2 = { "const"};
+            string[] delimiters = { " " };
+            string[] dataTypes = { "int" };
+            string[] equallies = { "=" };
+            string[] pluses = { "+" };
+            string[] minuses = { "-" };
+            string[] semicolones = { ";" };
+
+
+            List<Lexeme> lexemes = new List<Lexeme>();
+
+            int position = 0;
+            while (position < input.Length)
+            {
+                bool found = false;
+                //constexpr
+                foreach (string keyword in keyword1)
+                {
+                    if (input.Substring(position).StartsWith(keyword))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Keyword1], LexemeType.Keyword1, input, position, position + keyword.Length - 1));
+                        position += keyword.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //const
+                foreach (string keyword in keyword2)
+                {
+                    if (input.Substring(position).StartsWith(keyword))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Keyword2], LexemeType.Keyword2, input, position, position + keyword.Length - 1));
+                        position += keyword.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+
+                //data type
+                foreach (string dataType in dataTypes)
+                {
+                    if (input.Substring(position).StartsWith(dataType))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.DataType], LexemeType.DataType, input, position, position + dataType.Length - 1));
+                        position += dataType.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //=
+                foreach (string op in equallies)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Equally, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //+
+                foreach (string op in pluses)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Plus, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //-
+                foreach (string op in minuses)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Minus, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //;
+                foreach (string op in semicolones)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Semicolon], LexemeType.Semicolon, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+
+
+                if (found) continue;
+
+                //_
+                foreach (string delimiter in delimiters)
+                {
+                    if (input.Substring(position).StartsWith(delimiter))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Delimiter], LexemeType.Delimiter, input, position, position + delimiter.Length - 1));
+                        position += delimiter.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //name
+                if (char.IsLetter(input[position]))
+                {
+                    int start = position;
+                    while (position < input.Length && char.IsLetterOrDigit(input[position]))
+                    {
+                        position++;
+                    }
+                    string identifier = input.Substring(start, position - start);
+                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Identifier], LexemeType.Identifier, input, start, position - 1));
+                }
+                //value
+                else if (char.IsDigit(input[position]))
+                {
+                    int start = position;
+                    while (position < input.Length && char.IsDigit(input[position]))
+                    {
+                        position++;
+                    }
+                    string number = input.Substring(start, position - start);
+                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Number], LexemeType.Number, input, start, position - 1));
+                }
+                //error
+                else
+                {
+                    string invalid = input[position].ToString();
+                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Invalid], LexemeType.Invalid, input, position, position));
+                    position++;
+                }
+            }
+
+            dataGridView1.Rows.Clear();
+            foreach (Lexeme lexeme in lexemes)
+            {
+                dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
+            }
         }
     }
 }
