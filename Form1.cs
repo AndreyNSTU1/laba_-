@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -278,7 +279,7 @@ namespace laba1
             }
             else if (result == DialogResult.Cancel)
             {
-                // Отмена закрытия формы
+                
                 return;
             }
 
@@ -330,6 +331,480 @@ namespace laba1
         {
 
         }
+        public class Parser
+        {
+            private List<Lexeme> lexemes;
+            private int position;
+            public int counter;
+
+            public Parser(List<Lexeme> lexemes)
+            {
+                this.lexemes = lexemes;
+                this.position = 0;
+                this.counter = 0;
+            }
+
+            public void Parse(DataGridView dataGridView1)
+            {
+                
+
+                for (int u = 0; u < lexemes.Count; u++)
+                {
+                    if (lexemes[u].Type == LexemeType.Invalid)
+                    {
+                        
+                        dataGridView1.Rows.Add($"Недопустимый символ в позиции {lexemes[position].StartPosition}");
+                        counter++;
+
+                    }
+                }
+                DEF(dataGridView1);
+              
+            }
+
+            private void DEF(DataGridView dataGridView1)
+            {
+                try
+                {
+
+
+                    if (lexemes[position].Type == LexemeType.Keyword2 || lexemes[position].Type == LexemeType.Keyword1   )
+                    {
+                        position++;
+                        DEFREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        position++;
+                        counter++;
+                        DEF(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.Keyword2 || lexemes[position].Type != LexemeType.Keyword1)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        position++;
+                        counter++;
+                        DEF(dataGridView1);
+                    }
+
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался ключевое слово 'const'");
+                        counter++;
+                        
+                        DEFREM(dataGridView1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                   
+                }
+            }
+
+            private void DEFREM(DataGridView dataGridView1)
+            {
+               
+                try
+                {
+
+
+                    if (lexemes[position].Type == LexemeType.Delimiter)
+                    {
+                        position++;
+                        TYPE(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        DEFREM(dataGridView1);
+                    }
+
+                    else if (lexemes[position].Type != LexemeType.Delimiter)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        DEFREM(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался пробел");
+                        counter++;
+                       
+                        TYPE(dataGridView1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                  
+                }
+            }
+            private void TYPE(DataGridView dataGridView1)
+            {
+                try
+                {
+
+
+                    if (lexemes[position].Type == LexemeType.DataType)
+                    {
+                        position++;
+                        
+                        TYPEREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        TYPE(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.DataType)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        TYPE(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался тип данных");
+                        counter++;
+                        
+                        TYPEREM(dataGridView1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                 
+                }
+            }
+
+            private void TYPEREM(DataGridView dataGridView1)
+            {
+               
+                try
+                {
+                    if (lexemes[position].Type == LexemeType.Delimiter)
+                    {
+                        position++;
+                        ID(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        DEFREM(dataGridView1);
+                    }
+
+                    else if (lexemes[position].Type != LexemeType.Delimiter)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        DEFREM(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался пробел");
+                        counter++;
+                        
+                        ID(dataGridView1);
+                    }
+
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                    
+                }
+
+            }
+            private void ID(DataGridView dataGridView1)
+            {
+                try
+                {
+
+
+                    if (lexemes[position].Type == LexemeType.Identifier)
+                    {
+                        position++;
+                        
+                        IDREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ  {lexemes[position].Token}  в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        ID(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.Identifier)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        ID(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался идентификатор");
+                        counter++;
+                        
+                        IDREM(dataGridView1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                   
+                }
+            }
+
+            private void IDREM(DataGridView dataGridView1)
+            {
+               
+                try
+                {
+                    if (lexemes[position].Type == LexemeType.Delimiter)
+                    {
+                        position++;
+                        try
+                        {
+
+
+                            if (lexemes[position].Type == LexemeType.Equally)
+                            {
+                                position++;
+                                EQUAL(dataGridView1);
+                            }
+                            else if (lexemes[position].Type == LexemeType.Invalid)
+                            {
+
+                                dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                                counter++;
+                                position++;
+                                TYPEREM(dataGridView1);
+                            }
+                            else if (lexemes[position].Type != LexemeType.Equally)
+                            {
+                                dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                                counter++;
+                                position++;
+                                TYPEREM(dataGridView1);
+                            }
+                            else
+                            {
+                                dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался равно");
+                                counter++;
+                               
+                                EQUAL(dataGridView1);
+                            }
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                            counter++;
+                           
+                        }
+                    }
+
+                    else if (lexemes[position].Type == LexemeType.Equally)
+                    {
+                        position++;
+                        EQUAL(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидался равно");
+                        counter++;
+                        
+                        EQUAL(dataGridView1);
+                    }
+
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                    
+                }
+
+            }
+
+
+
+
+            private void EQUAL(DataGridView dataGridView1)
+            {
+                if (lexemes[position].Type == LexemeType.Delimiter)
+                {
+                    position++;
+                    if ((lexemes[position].Type == LexemeType.Plus) || (lexemes[position].Type == LexemeType.Minus))
+                    {
+                        position++;
+                        NUMBER(dataGridView1);
+                    }
+                    else
+                    {
+                        NUMBER(dataGridView1);
+                    }
+                }
+                else if ((lexemes[position].Type == LexemeType.Plus) || (lexemes[position].Type == LexemeType.Minus))
+                {
+                    position++;
+                    NUMBER(dataGridView1);
+                }
+                else
+                {
+                    NUMBER(dataGridView1);
+                }
+                
+            }
+
+            private void NUMBER(DataGridView dataGridView1)
+            {
+                try
+                {
+
+
+                    if (lexemes[position].Type == LexemeType.Number)
+                    {
+                        position++;
+                        NUMBERREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBER(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.Number)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBER(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидалось число");
+                        counter++;
+                        
+                        NUMBERREM(dataGridView1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                   
+                }
+            }
+
+            private void NUMBERREM(DataGridView dataGridView1)
+            {
+
+                try
+                {
+                    if (lexemes[position].Type == LexemeType.Semicolon)
+                    {
+                        position++;
+                       
+                        END(dataGridView1);
+
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBERREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.Semicolon)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBERREM(dataGridView1);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add($"Ошибка синтаксиса в позиции {lexemes[position].StartPosition}: ожидалась точка с запятой");
+                        counter++;
+                        
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    dataGridView1.Rows.Add($"Неожиданный символ '\0'");
+                    counter++;
+                    
+                }
+
+
+
+            }
+            private void END(DataGridView dataGridView1)
+            {
+                
+                try
+                {
+                    if (lexemes[position].Type == LexemeType.EndStr)
+                    {
+                        position++;
+                        if (lexemes[position].Type == LexemeType.NewStr)
+                        {
+                            position++;
+                            DEF(dataGridView1);
+                        }
+                    }
+                    else if (lexemes[position].Type == LexemeType.Invalid)
+                    {
+
+                        dataGridView1.Rows.Add($"Недопустимый символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBERREM(dataGridView1);
+                    }
+                    else if (lexemes[position].Type != LexemeType.Invalid)
+                    {
+                        dataGridView1.Rows.Add($"Отброшенный символ {lexemes[position].Token} в позиции {lexemes[position].StartPosition}");
+                        counter++;
+                        position++;
+                        NUMBERREM(dataGridView1);
+                    }
+
+
+                    
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                   
+                }
+
+            }
+        }
+
         public class Lexeme
         {
             public int Code 
@@ -364,7 +839,9 @@ namespace laba1
             Delimiter,
             Identifier,
             Number,
-            Invalid
+            Invalid,
+            EndStr,
+            NewStr
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
@@ -387,7 +864,9 @@ namespace laba1
     { LexemeType.Minus, 7 },
     { LexemeType.Semicolon, 10 },
     { LexemeType.Number, 9 },
-    { LexemeType.Invalid, 11 }
+    { LexemeType.Invalid, 11 },
+    { LexemeType.EndStr, 12 },
+    { LexemeType.NewStr, 13 }
 };
 
             string[] keyword1 = { "constexpr" };
@@ -398,6 +877,8 @@ namespace laba1
             string[] pluses = { "+" };
             string[] minuses = { "-" };
             string[] semicolones = { ";" };
+            char[] endstring = { '\r' };
+            char[] startstring = { '\n'};
 
 
             List<Lexeme> lexemes = new List<Lexeme>();
@@ -515,6 +996,33 @@ namespace laba1
                         break;
                     }
                 }
+                if (found) continue;
+                foreach (char endstr in endstring)
+                {
+                    if (input[position] == endstr)
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.EndStr], LexemeType.EndStr, input, position, position));
+                        position++;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //  \n
+                foreach (char newstr in startstring)
+                {
+                    if (input[position] == newstr)
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.NewStr], LexemeType.NewStr, input, position, position));
+                        position++;
+                        found = true;
+                        break;
+                    }
+                }
+
+                ;
 
                 if (found) continue;
 
@@ -550,10 +1058,21 @@ namespace laba1
             }
 
             dataGridView1.Rows.Clear();
+            Parser parser = new Parser(lexemes);
+
+            parser.Parse(dataGridView1);
+
+            label1.Text = "Количество ошибок: " + parser.counter;
+            if (parser.counter == 0)
+            {
+                dataGridView1.Rows.Add("Ошибок нет");
+            }
+
             foreach (Lexeme lexeme in lexemes)
             {
                 dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
             }
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
