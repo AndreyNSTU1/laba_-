@@ -850,6 +850,11 @@ namespace laba1
 
         private void buttonPlay_Click_1(object sender, EventArgs e)
         {
+            parser();
+
+        }
+        private void parser() 
+        {
             string input = inputTextBox.Text;
 
             Dictionary<LexemeType, int> lexemeCodes = new Dictionary<LexemeType, int>()
@@ -878,7 +883,7 @@ namespace laba1
             string[] minuses = { "-" };
             string[] semicolones = { ";" };
             char[] endstring = { '\r' };
-            char[] startstring = { '\n'};
+            char[] startstring = { '\n' };
 
 
             List<Lexeme> lexemes = new List<Lexeme>();
@@ -1057,27 +1062,30 @@ namespace laba1
                 }
             }
 
-            dataGridView1.Rows.Clear();
+            dataGridView2.Rows.Clear();
             Parser parser = new Parser(lexemes);
 
-            parser.Parse(dataGridView1);
+            parser.Parse(dataGridView2);
 
             label1.Text = "Количество ошибок: " + parser.counter;
             if (parser.counter == 0)
             {
-                dataGridView1.Rows.Add("Ошибок нет");
+                dataGridView2.Rows.Add("Ошибок нет");
             }
 
             foreach (Lexeme lexeme in lexemes)
             {
                 dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
             }
-
         }
-
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            parser();
         }
     }
 }
