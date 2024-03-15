@@ -25,12 +25,13 @@
         <p><b><i>Граф конечного автомата: </b></i></p> 
         <img src = "Автомат.jpg" style="width: 700px">   
     <p><b><i>Тестовые примеры:</b></i></p>
-    <img src = "тест1.png" style="width: 700px">
-    <img src = "тест2.png" style="width: 700px">
-    <img src = "тест3.png" style="width: 700px">
-    <img src = "тест4.png" style="width: 700px">
-    <img src = "тест5.png" style="width: 700px">
-    <img src = "тест6.png" style="width: 700px">
+
 </body>
 
 </html>
+    <img src = "тест1.png" style="width: 700px"/>
+    <img src = "тест2.png" style="width: 700px"/>
+    <img src = "тест3.png" style="width: 700px"/>
+    <img src = "тест4.png" style="width: 700px"/>
+    <img src = "тест5.png" style="width: 700px"/>
+    <img src = "тест6.png" style="width: 700px"/>
