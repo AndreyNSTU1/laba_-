@@ -9,14 +9,14 @@
 <p>const int d = -123; </p>
 <p><b><i>Разработанная грамматика:</b></i></p>    
 <p>const int a = +-123;</p>
-<p>1) DEF -> [‘const’|”constexpr”] CONST </p>
+<p>1) DEF -> [‘const’|‘constexpr’] CONST </p>
 <p>2) CONST -> ‘_’ INT</p>
 <p>3) INT -> ‘int’ INTREM</p>
 <p>4) INTREM -> ‘_’ ID</p>
 <p>5) ID ->letter IDREM</p>
 <p>6) IDREM -> letter IDREM</p>
 <p>7) IDREM -> ‘=’EQUAL</p>
-<p>8) EQUAL -> [+ | -] NUMBER</p>
+<p>8) EQUAL -> [‘+’ | ‘-’] NUMBER</p>
 <p>9) NUMBER -> digit NUMBERREM</p>
 <p>10) NUMBERREM -> digit NUMBERREM</p>
 <p>	11) NUMBERREM -> ;</p>
