@@ -5,12 +5,12 @@
 <body>
     <p><b><i>Примеры допустимых строк:</b></i></p>
 
-        <p>const int abc = 123; </p>
+    <p>const int abc = 123; </p>
         <p>constexpr int b= 123; </p>
         <p>const int d = -123; </p>
-    <p><b><i>Разработанная грамматика:</b></i></p>    
+        <p><b><i>Разработанная грамматика:</b></i></p>    
         <p>const int a = +-123;</p>
-<p>) DEF -> [‘const’|”constexpr”] CONST </p>
+<p>1) DEF -> [‘const’|”constexpr”] CONST </p>
 <p>2) CONST -> ‘_’ INT</p>
 <p>3) INT -> ‘int’ INTREM</p>
 <p>4) INTREM -> ‘_’ ID</p>
